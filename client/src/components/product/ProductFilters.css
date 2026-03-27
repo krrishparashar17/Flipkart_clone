@@ -1,0 +1,38 @@
+.filters {
+  background: #fff;
+  padding: 16px;
+  border-radius: 4px;
+  min-height: 300px;
+}
+
+.filters__title {
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  color: #212121;
+}
+
+.filters__section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filters__label {
+  font-weight: 600;
+  color: #212121;
+}
+
+.filters__chip {
+  border: 1px solid #ddd;
+  background: #fff;
+  padding: 10px 12px;
+  border-radius: 4px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.filters__chip.active {
+  background: #2874f0;
+  color: #fff;
+  border-color: #2874f0;
+}

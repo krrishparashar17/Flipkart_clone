@@ -1,0 +1,44 @@
+.home-page {
+  width: 95%;
+  max-width: 1400px;
+  margin: 20px auto;
+}
+
+.home-page__layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 16px;
+}
+
+.home-page__content {
+  min-height: 400px;
+}
+
+.home-page__header {
+  background: #fff;
+  padding: 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.home-page__header h2 {
+  color: #212121;
+  margin-bottom: 4px;
+}
+
+.home-page__header p {
+  color: #878787;
+}
+
+.home-page__loading {
+  background: #fff;
+  padding: 24px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .home-page__layout {
+    grid-template-columns: 1fr;
+  }
+}
