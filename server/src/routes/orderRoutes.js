@@ -1,9 +1,16 @@
-const express = require("express");
-const router = express.Router();
-const orderController = require("../controllers/orderController");
+import api from "./api";
 
-router.get("/", orderController.getOrders);
-router.get("/history", orderController.getOrderHistoryByEmail);
-router.post("/", orderController.placeOrder);
+export const placeOrder = async (payload) => {
+  const response = await api.post("/api/orders", payload);
+  return response.data;
+};
 
-module.exports = router;
+export const getAllOrders = async () => {
+  const response = await api.get("/api/orders");
+  return response.data;
+};
+
+export const getOrderHistoryByEmail = async (email) => {
+  const response = await api.get(`/api/orders/history?email=${encodeURIComponent(email)}`);
+  return response.data;
+};
