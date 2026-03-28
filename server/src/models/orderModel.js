@@ -71,6 +71,7 @@ const createOrder = async (orderData) => {
     return orderId;
   } catch (error) {
     await connection.rollback();
+    console.error("createOrder model error:", error);
     throw error;
   } finally {
     connection.release();
