@@ -16,11 +16,25 @@ function HomePage() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
+
+      const cacheKey = `products_${selectedCategory || "all"}`;
+      const cachedProducts = localStorage.getItem(cacheKey);
+
+      if (cachedProducts) {
+        const parsedProducts = JSON.parse(cachedProducts);
+        setProducts(parsedProducts);
+        setLoading(false);
+      }
+
       const data = await getAllProducts("", selectedCategory);
       setProducts(data || []);
+      localStorage.setItem(cacheKey, JSON.stringify(data || []));
     } catch (error) {
       console.error("Failed to fetch products:", error);
-      setProducts([]);
+
+      if (products.length === 0) {
+        setProducts([]);
+      }
     } finally {
       setLoading(false);
     }
@@ -28,11 +42,17 @@ function HomePage() {
 
   const fetchCategories = async () => {
     try {
+      const cachedCategories = localStorage.getItem("categories");
+
+      if (cachedCategories) {
+        setCategories(JSON.parse(cachedCategories));
+      }
+
       const data = await getCategories();
       setCategories(data || []);
+      localStorage.setItem("categories", JSON.stringify(data || []));
     } catch (error) {
       console.error("Failed to fetch categories:", error);
-      setCategories([]);
     }
   };
 
@@ -76,7 +96,7 @@ function HomePage() {
               <p>{filteredProducts.length} items found</p>
             </div>
 
-            {loading ? (
+            {loading && products.length === 0 ? (
               <div className="home-page__loading">Loading products...</div>
             ) : (
               <ProductGrid products={filteredProducts} />
