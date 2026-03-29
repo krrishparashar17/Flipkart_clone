@@ -359,30 +359,11 @@ Admin dashboard
 Inventory management
 Better skeleton loaders and toast notifications
 Dedicated health monitoring / uptime ping for backend
-Author
 
-Krrish
+
+Author
+Krrish Parashar
 
 Built as part of the Scaler SDE Intern Fullstack Assignment.
 
-
 ---
-
-# Why this version is better than your current one
-
-Your current README has a few mismatches compared to your actual project :contentReference[oaicite:1]{index=1}:
-
-## Fixes I made:
-1. **Corrected order history endpoint**
-- Your README says:
-  - `GET /api/orders/history/:email`
-- But your actual route is:
-  - `GET /api/orders/history?email=<email>`
-
-2. **Added deployment links**
-- Vercel frontend
-- Render backend
-
-3. **Added Render free-tier cold start note**
-This is important because you specifically asked to mention:
-- due to free Render it may take time on first load
