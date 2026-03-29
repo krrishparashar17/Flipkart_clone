@@ -19,9 +19,22 @@ function ProductDetailPage() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await getProductById(id);
-        setProduct(response.data);
-        setActiveImage(response.data.images?.[0] || response.data.thumbnail);
+        const cacheKey = `product_${id}`;
+        const cachedProduct = localStorage.getItem(cacheKey);
+
+        if (cachedProduct) {
+          const parsedProduct = JSON.parse(cachedProduct);
+          setProduct(parsedProduct);
+          setActiveImage(parsedProduct.images?.[0] || parsedProduct.thumbnail || "");
+        }
+
+        const data = await getProductById(id);
+
+        if (data) {
+          setProduct(data);
+          setActiveImage(data.images?.[0] || data.thumbnail || "");
+          localStorage.setItem(cacheKey, JSON.stringify(data));
+        }
       } catch (error) {
         console.error("Failed to fetch product:", error);
       }
