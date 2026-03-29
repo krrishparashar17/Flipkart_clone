@@ -1,18 +1,22 @@
 import { useEffect, useState } from "react";
+import Navbar from "../components/common/Navbar";
+import ProductFilters from "../components/product/ProductFilters";
+import ProductGrid from "../components/product/ProductGrid";
 import { getAllProducts, getCategories } from "../services/productService";
-import ProductCard from "../components/ProductCard";
+import "./HomePage.css";
 
-const HomePage = () => {
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
+function HomePage() {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const data = await getAllProducts(selectedCategory);
+      const data = await getAllProducts("", selectedCategory);
       setProducts(data || []);
     } catch (error) {
       console.error("Failed to fetch products:", error);
@@ -40,81 +44,48 @@ const HomePage = () => {
     fetchProducts();
   }, [selectedCategory]);
 
-  const filteredProducts = products.filter((product) =>
-    `${product.name || ""} ${product.brand || ""} ${product.description || ""}`
-      .toLowerCase()
-      .includes(search.toLowerCase())
-  );
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const filtered = products.filter((product) =>
+        `${product.name || ""} ${product.brand || ""} ${product.description || ""}`
+          .toLowerCase()
+          .includes(search.toLowerCase())
+      );
+
+      setFilteredProducts(filtered);
+    }, 200);
+
+    return () => clearTimeout(timer);
+  }, [search, products]);
 
   return (
-    <div className="homepage">
-      <div className="container homepage-layout">
-        {/* Sidebar */}
-        <aside className="filters-sidebar card">
-          <h2 className="filters-title">Filters</h2>
+    <>
+      <Navbar search={search} setSearch={setSearch} />
 
-          <div className="filter-section">
-            <h3 className="filter-heading">Category</h3>
+      <div className="home-page">
+        <div className="home-page__layout">
+          <ProductFilters
+            categories={categories}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+          />
 
-            <button
-              className={`category-btn ${selectedCategory === "" ? "active" : ""}`}
-              onClick={() => setSelectedCategory("")}
-            >
-              All
-            </button>
-
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                className={`category-btn ${
-                  selectedCategory === String(category.id) ? "active" : ""
-                }`}
-                onClick={() => setSelectedCategory(String(category.id))}
-              >
-                {category.name}
-              </button>
-            ))}
-          </div>
-        </aside>
-
-        {/* Main Content */}
-        <main className="products-section">
-          {/* Search + Header */}
-          <div className="products-header card">
-            <div className="search-wrapper">
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Search for products, brands and more"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
+          <main className="home-page__content">
+            <div className="home-page__header">
+              <h2>Products for you</h2>
+              <p>{filteredProducts.length} items found</p>
             </div>
 
-            <div className="products-meta">
-              <h1 className="products-title">Products for you</h1>
-              <p className="products-count">{filteredProducts.length} items found</p>
-            </div>
-          </div>
-
-          {/* Product Grid */}
-          <div className="card products-grid-wrapper">
             {loading ? (
-              <div className="empty-state">Loading products...</div>
-            ) : filteredProducts.length === 0 ? (
-              <div className="empty-state">No products found.</div>
+              <div className="home-page__loading">Loading products...</div>
             ) : (
-              <div className="products-grid">
-                {filteredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
+              <ProductGrid products={filteredProducts} />
             )}
-          </div>
-        </main>
+          </main>
+        </div>
       </div>
-    </div>
+    </>
   );
-};
+}
 
 export default HomePage;

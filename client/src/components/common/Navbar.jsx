@@ -1,28 +1,13 @@
 import { useContext } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { CartContext } from "../../context/CartContext";
 import { WishlistContext } from "../../context/WishlistContext";
 
-function Navbar() {
-  const navigate = useNavigate();
-  const location = useLocation();
+function Navbar({ search, setSearch }) {
   const { cartItems } = useContext(CartContext);
   const { wishlistItems } = useContext(WishlistContext);
 
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-
-  const handleSearch = (e) => {
-    const value = e.target.value;
-    const params = new URLSearchParams(location.search);
-
-    if (value.trim()) {
-      params.set("search", value.trim());
-    } else {
-      params.delete("search");
-    }
-
-    navigate(`/?${params.toString()}`);
-  };
 
   return (
     <header className="navbar">
@@ -37,8 +22,8 @@ function Navbar() {
             type="text"
             className="navbar__search-input"
             placeholder="Search for products, brands and more"
-            defaultValue={new URLSearchParams(location.search).get("search") || ""}
-            onChange={handleSearch}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
         </div>
 
