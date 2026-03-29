@@ -28,17 +28,14 @@ function CartProvider({ children }) {
     });
   };
 
-  const updateQuantity = (productId, type) => {
+  const updateQuantity = (productId, newQuantity) => {
     setCartItems((prev) =>
       prev
-        .map((item) => {
-          if (item.id !== productId) return item;
-
-          const updatedQty =
-            type === "increase" ? item.quantity + 1 : item.quantity - 1;
-
-          return { ...item, quantity: updatedQty };
-        })
+        .map((item) =>
+          item.id === productId
+            ? { ...item, quantity: newQuantity }
+            : item
+        )
         .filter((item) => item.quantity > 0)
     );
   };
