@@ -1,67 +1,87 @@
-
 # Flipkart Clone - Full Stack E-Commerce Application
 
-A full-stack Flipkart-inspired e-commerce web application built as part of the **Scaler SDE Intern Fullstack Assignment**.
+A full-stack Flipkart-inspired e-commerce web application built as part of the Scaler SDE Intern Fullstack Assignment.
 
-This project demonstrates the implementation of a modern e-commerce platform with product browsing, product details, cart management, wishlist, checkout flow, order placement, order history, and email confirmation — all without requiring user login, as per assignment requirements.
+This project demonstrates the implementation of a modern e-commerce platform with product browsing, product details, search and filtering, cart management, wishlist functionality, checkout flow, order placement, order history, and email confirmation without requiring user authentication, as per assignment requirements.
 
 ---
 
-##  Tech Stack
+## Live Demo
+
+Frontend (Vercel):  
+https://flipkart-clone-76ml.vercel.app/
+
+Backend API (Render):  
+https://flipkart-clone-api-ksfu.onrender.com
+
+---
+
+## Tech Stack
 
 ### Frontend
-- **React.js**
-- **React Router DOM**
-- **Context API**
-- **CSS3 (Custom Styling)**
+- React.js
+- Vite
+- React Router DOM
+- Context API
+- CSS3 (Custom Styling)
+- Axios
 
 ### Backend
-- **Node.js**
-- **Express.js**
-- **MySQL**
-- **mysql2**
-- **Nodemailer**
+- Node.js
+- Express.js
+- MySQL-compatible database (TiDB Cloud)
+- mysql2
+- Nodemailer
+- dotenv
+
+### Deployment
+- Vercel (Frontend)
+- Render (Backend)
+- TiDB Cloud (Database)
 
 ---
 
-##  Features Implemented
+## Features Implemented
 
 ### Core Features
 - Product listing page
 - Product detail page
-- Search products by name/brand
+- Search products by name and brand
 - Category filtering
 - Add to cart
 - Update cart quantity
 - Remove from cart
 - Checkout flow
 - Place order
-- Order success page
+- Order success flow
+- Order history lookup using email
 
 ### Extended Features
 - Wishlist functionality
-- Order history (email-based, no login required)
 - Order confirmation email after checkout
 - Responsive and modern UI
-- MySQL-based persistent order storage
+- Persistent order storage in database
+- Product image gallery on product detail page
+- Faster revisit experience using client-side caching for product data
 
 ---
 
-##  Assignment Requirement Alignment
+## Assignment Requirement Alignment
 
-This project follows the assignment requirement that:
+This project follows the assignment requirement that authentication is not required.
 
-- **No login / authentication is required**
-- Customer **email is collected during checkout**
+Implementation approach:
+- No login or signup flow is included
+- Customer email is collected during checkout
 - The same email is used to:
   - send order confirmation email
   - fetch order history
 
-This design choice ensures the application remains simple while still supporting post-order user actions.
+This keeps the application simple while still supporting post-order user actions.
 
 ---
 
-##  Project Structure
+## Project Structure
 
 ```bash
 flipkart_clone/
@@ -77,8 +97,11 @@ flipkart_clone/
 │   │   ├── pages/
 │   │   ├── services/
 │   │   ├── styles/
+│   │   ├── utils/
 │   │   ├── App.jsx
 │   │   └── main.jsx
+│   ├── .env
+│   ├── .env.production
 │   ├── package.json
 │   └── vite.config.js
 │
@@ -89,8 +112,6 @@ flipkart_clone/
 │   │   ├── middlewares/
 │   │   ├── models/
 │   │   ├── routes/
-│   │   ├── seed/
-│   │   ├── services/
 │   │   ├── utils/
 │   │   ├── app.js
 │   │   └── server.js
@@ -100,297 +121,268 @@ flipkart_clone/
 │
 ├── package.json                    # Root scripts for running client + server
 └── README.md
-````
-
----
-
-##  Setup Instructions
-
-### 1. Clone the repository
-
-```bash
+```
+Functionalities
+1. Product Browsing
+Users can browse all available products
+Products are displayed in a clean Flipkart-inspired layout
+Product cards show image, title, brand, rating, price, and discount
+2. Search and Filtering
+Search products by product name or brand
+Filter products by category
+Search and category filters work together for refined results
+3. Product Detail Page
+View full product details
+View multiple product images
+See product description and specifications
+Add product to cart directly
+Buy product immediately from detail page
+4. Cart Management
+Add items to cart
+Increase or decrease quantity
+Remove items from cart
+Cart count is reflected in the navbar
+5. Wishlist
+Add products to wishlist
+Remove products from wishlist
+Wishlist is stored client-side for quick access
+6. Checkout and Order Placement
+No login required
+User enters:
+customer name
+email
+phone number
+address details
+Order is stored in the database
+Order items are stored separately for proper order mapping
+7. Order History
+User can fetch previous orders using the same email used during checkout
+Order history displays matching orders and purchased items
+8. Order Confirmation Email
+After successful checkout, an order confirmation email is sent
+Email includes:
+order ID
+total amount
+ordered items
+Setup Instructions
+1. Clone the repository
 git clone <your-repo-url>
 cd flipkart_clone
-```
-
----
-
-### 2. Install dependencies
-
-### Root
-
-```bash
+2. Install dependencies
+Root
 npm install
-```
-
-### Client
-
-```bash
+Client
 cd client
 npm install
-```
-
-### Server
-
-```bash
+Server
 cd ../server
 npm install
-```
+Database Setup
 
----
+This project uses a MySQL-compatible schema and can run with:
 
-##  Database Setup (MySQL)
+MySQL (local development)
+TiDB Cloud (deployed version)
+1. Create database
 
-### 1. Create database manually in MySQL Workbench
+For local MySQL:
 
-Open MySQL Workbench and run:
-
-```sql
 CREATE DATABASE flipkart_clone;
-```
-
----
-
-### 2. Run the schema file
+2. Run the schema file
 
 Open:
 
-```bash
 server/schema.sql
-```
 
-Copy the SQL and execute it in MySQL Workbench.
+Execute the SQL in MySQL Workbench, MySQL CLI, or TiDB SQL Editor.
 
-This will create:
+This creates:
 
-* categories
-* products
-* product_images
-* orders
-* order_items
-* and seed/sample data
-
-> **Note:** The `schema.sql` file is included in the repository for version control and reproducibility.
-> It must still be executed manually (or via MySQL CLI) to initialize the database.
-
----
-
-##  Environment Variables
-
-Create a `.env` file inside the `server` folder.
-
-### `server/.env`
-
-```env
+categories
+products
+product_images
+orders
+order_items
+sample seed data
+Environment Variables
+Server (server/.env)
 PORT=5000
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=your_mysql_password
+
+DB_HOST=your_db_host
+DB_PORT=4000
+DB_USER=your_db_user
+DB_PASSWORD=your_db_password
 DB_NAME=flipkart_clone
+DB_SSL=true
 
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USER=your_email@gmail.com
 MAIL_PASS=your_gmail_app_password
 MAIL_FROM=Flipkart Clone <your_email@gmail.com>
-```
+Client (client/.env)
+VITE_API_BASE_URL=http://localhost:5000
+Client Production (client/.env.production)
+VITE_API_BASE_URL=https://flipkart-clone-api-ksfu.onrender.com
+Email Configuration
 
----
+This project sends an order confirmation email after successful checkout.
 
-## 📧 Email Configuration (Important)
+For Gmail:
 
-This project sends an **order confirmation email** after successful checkout.
-
-### For Gmail:
-
-Use a **Gmail App Password**, not your normal Gmail password.
-
-### Steps:
-
-1. Enable **2-Step Verification** on your Google account
-2. Go to **App Passwords**
-3. Generate a new app password
-4. Use that 16-character password in:
-
-```env
+Use a Gmail App Password
+Do not use your normal Gmail password
+Steps
+Enable 2-Step Verification on your Google account
+Go to App Passwords
+Generate a new app password
+Use that value in:
 MAIL_PASS=your_gmail_app_password
-```
 
-> If email sending fails, the order is still saved successfully in the database.
+Note:
 
----
-
-##  Running the Project
-
-### Run both frontend and backend together (from root)
-
-```bash
+If email sending fails, the order can still be saved successfully in the database
+Email sending is handled separately from order creation to avoid blocking the main flow
+Running the Project Locally
+Run both frontend and backend together (from root)
 npm run dev
-```
 
 This starts:
 
-* Frontend → `http://localhost:5173`
-* Backend → `http://localhost:5000`
-
----
-
-### Or run separately
-
-#### Frontend
-
-```bash
+Frontend: http://localhost:5173
+Backend: http://localhost:5000
+Or run separately
+Frontend
 cd client
 npm run dev
-```
-
-#### Backend
-
-```bash
+Backend
 cd server
 npm run dev
-```
+API Endpoints
+Products
+GET /api/products → Get all products
+GET /api/products/:id → Get product details
+GET /api/products/categories/all → Get all categories
+Orders
+POST /api/orders → Place order
+GET /api/orders → Get all orders
+GET /api/orders/history?email=<email> → Get order history by email
+Optional Health Check
+GET /api/health → Health check route (recommended for uptime monitoring if enabled)
+Deployment Notes
+Frontend
+Deployed on Vercel
+Backend
+Deployed on Render
+Database
+Connected to TiDB Cloud using MySQL-compatible connection
+Important Note About Free Render Deployment
 
----
+This project uses Render free tier for backend hosting.
 
-## API Endpoints
+Because of Render free tier limitations:
 
-### Products
+the backend service may spin down after inactivity
+the first API request after inactivity can take significantly longer than normal
+in some cases, the initial response may take around 30–60 seconds
 
-* `GET /api/products` → Get all products
-* `GET /api/products/:id` → Get product details
+This is known as a cold start issue and is expected on free-tier backend hosting.
 
-### Orders
+What this means in practice
+First visit after long inactivity may feel slow
+Product list or product details may take time on the very first request
+After the backend wakes up, subsequent requests become much faster
+Current Optimization
 
-* `POST /api/orders` → Place order
-* `GET /api/orders` → Get all orders (basic)
-* `GET /api/orders/history/:email` → Get order history by email *(if implemented in your final version)*
+To improve user experience:
 
----
+client-side caching is used for product list data
+client-side caching is used for product detail data
+repeat visits feel much faster after the first successful load
+Recommended Production Improvement
 
-##  Application Flow
+For a smoother production experience:
 
-### Product Browsing
+use a paid backend instance on Render
+or use an uptime monitor (such as UptimeRobot) to periodically ping the backend
+or move backend hosting to a provider without aggressive sleep on free tier
+Database Verification
 
-* User lands on home page
-* Can search products
-* Can filter by category
-* Can view product details
+To verify order persistence:
 
-### Cart + Wishlist
-
-* Products can be added to cart
-* Products can be added to wishlist
-* Wishlist is stored client-side for quick access
-
-### Checkout
-
-* No login required
-* User enters:
-
-  * name
-  * email
-  * phone
-  * address details
-
-### Order Placement
-
-* Order is saved in:
-
-  * `orders`
-  * `order_items`
-* Confirmation email is sent to the entered email address
-
-### Order History
-
-* User enters the same email used during checkout
-* Matching orders are displayed
-
----
-
-##  Database Verification
-
-To verify that orders are being stored correctly, run:
-
-```sql
 SELECT * FROM orders;
-```
-
-```sql
 SELECT * FROM order_items;
-```
+Design Decisions
+Why no login?
 
----
-
-## 📸 UI Notes
-
-The UI is designed to be:
-
-* clean
-* modern
-* recruiter-friendly
-* Flipkart-inspired
-* responsive for basic screen sizes
-
-Additional effort was made to:
-
-* improve layout consistency
-* handle missing/broken product images gracefully
-* keep the interface professional and minimal
-
----
-
-##  Design Decisions
-
-### Why no login?
-
-The assignment explicitly states that **authentication is not required**.
+The assignment explicitly states that authentication is not required.
 
 Therefore:
 
-* checkout collects user email
-* email is used for order confirmation
-* email is also used to fetch order history
+checkout collects user email
+email is used for order confirmation
+email is used to fetch order history
 
-This keeps the flow simple while still providing a user-friendly post-purchase experience.
+This keeps the flow simple and aligned with assignment requirements.
 
-### Why store `schema.sql` in the repository?
+Why use client-side cart and wishlist?
+
+Cart and wishlist are intentionally lightweight in this version:
+
+simpler assignment scope
+faster UI interactions
+no authentication dependency
+easier local persistence
+Why keep schema.sql in the repository?
 
 The schema file is included so that:
 
-* database design is visible to reviewers
-* setup is reproducible
-* project structure is more professional
-* future contributors can initialize the database easily
+database design is visible to reviewers
+setup is reproducible
+project structure looks professional
+future contributors can initialize the database easily
+Known Limitations
+Cart is currently client-side
+Wishlist is currently client-side
+No authentication system
+No payment gateway integration (mock checkout flow)
+Render free tier cold starts may delay the first backend response after inactivity
+Performance on first visit depends on backend wake-up time
+Possible Future Improvements
+Persistent cart in database
+Persistent wishlist in database
+User authentication and protected order history
+Payment integration (Razorpay / Stripe)
+Product reviews and ratings system
+Sorting and pagination
+Admin dashboard
+Inventory management
+Better skeleton loaders and toast notifications
+Dedicated health monitoring / uptime ping for backend
+Author
+
+Krrish
+
+Built as part of the Scaler SDE Intern Fullstack Assignment.
+
 
 ---
 
-##  Known Limitations
+# Why this version is better than your current one
 
-* Wishlist is currently client-side (localStorage / Context API based)
-* Cart is currently client-side
-* Payment gateway is not integrated (mock checkout flow)
-* Admin dashboard is not included
-* Deployment configuration may vary based on environment
+Your current README has a few mismatches compared to your actual project :contentReference[oaicite:1]{index=1}:
 
----
+## Fixes I made:
+1. **Corrected order history endpoint**
+- Your README says:
+  - `GET /api/orders/history/:email`
+- But your actual route is:
+  - `GET /api/orders/history?email=<email>`
 
-##  Possible Future Improvements
+2. **Added deployment links**
+- Vercel frontend
+- Render backend
 
-* Persistent cart in MySQL
-* Persistent wishlist in MySQL
-* User authentication
-* Razorpay / Stripe integration
-* Product reviews and ratings
-* Pagination / sorting
-* Admin product management
-* Deployment to Render / Vercel / Railway
-
----
-
-##  Author
-
-**Krrish**
-Built as part of the **Scaler SDE Intern Fullstack Assignment**
-
----
+3. **Added Render free-tier cold start note**
+This is important because you specifically asked to mention:
+- due to free Render it may take time on first load
